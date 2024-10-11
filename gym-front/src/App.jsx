@@ -19,6 +19,7 @@ const AppContent = () => {
         <Route path='/' element={<Inicio />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path="/admin/agregar-profesor" element={<ProfesFormPage />} /> 
+        <Route path="/admin/agregar-profesor/:id" element={<ProfesFormPage />} /> 
         <Route path='/admin/profesores' element={<Profesores />} />
         <Route path='/admin' element={<AdminIndex />} />
         <Route path='/profesor' element={<ProfesoresIndex />} />

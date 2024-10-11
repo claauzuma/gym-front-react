@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import AdminNavBar from "../../components/NavBarAdmin";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom"; 
+import axios from 'axios';
+
 
 const Profesores = () => {
   const [profesores, setProfesores] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); 
   const navigate = useNavigate(); 
+  const params = useParams();
 
   useEffect(() => {
     const fetchProfesores = async () => {
@@ -26,6 +29,28 @@ const Profesores = () => {
     profesor.apellido.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleDelete = async (profesor)=> {
+    console.log("Eliminamos al profesor " + profesor.nombre)
+    try {
+        const response = await axios.delete(`http://localhost:8080/api/usuarios/${profesor._id}`);
+        console.log("Profesor eliminado correctamente:", response.data);
+        setProfesores(prevProfesores => prevProfesores.filter(p => p._id !== profesor._id));
+
+    } catch(error) {
+        console.log("Error eliminando al profesor")
+    }
+  }
+
+  const handleDetail = (profesor)=> {
+    console.log("Vemos el detalle " + profesor.nombre)
+  }
+
+  const handleEdit = (profesor)=> {
+    console.log("Vamos a editar al profesor" + profesor.nombre)
+    navigate(`/admin/agregar-profesor/${profesor._id}`)
+  }
+
+
   const handleAddClick = () => {
     navigate("/admin/agregar-profesor"); 
   };
@@ -38,7 +63,7 @@ const Profesores = () => {
     <>
       <AdminNavBar />
       <div className="container mx-auto p-4">
-        {/* Buscador y botón de agregar */}
+ 
         <div className="flex justify-between items-center mb-4">
           <form onSubmit={handleSearchSubmit} className="flex">
             <input
@@ -78,9 +103,9 @@ const Profesores = () => {
                     <td className="px-6 py-2 whitespace-nowrap">{profesor.dni}</td>
                     <td className="px-6 py-2 whitespace-nowrap">{profesor.email}</td>
                     <td className="px-6 py-2 whitespace-nowrap">
-                      <button className="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600">Detalle</button>
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600">Editar</button>
-                      <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
+                      <button onClick= { ()=> { handleDetail(profesor) }} className="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600">Detalle</button>
+                      <button onClick= { ()=> { handleEdit(profesor) }}className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600">Editar</button>
+                      <button onClick= { ()=> { handleDelete(profesor) }} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
                     </td>
                   </tr>
                 ))}
