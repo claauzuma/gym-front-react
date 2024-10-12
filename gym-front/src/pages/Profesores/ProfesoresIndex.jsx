@@ -1,7 +1,12 @@
 import React from 'react';
+import ProfesoresNavBar from '../../components/NavBarProfesores';
 
 const ProfesoresIndex = () => {
   return (
+
+    <>
+  <ProfesoresNavBar/>
+
     <div className="min-h-screen bg-gradient-to-r from-yellow-400 via-red-500 to-pink-600 flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full">
         <h1 className="text-4xl font-bold text-gray-800 text-center mb-6">
@@ -50,6 +55,7 @@ const ProfesoresIndex = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -4,64 +4,63 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 
 
-const Profesores = () => {
-  const [profesores, setProfesores] = useState([]);
+const Alumnos = () => {
+  const [alumnos, setAlumnos] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); 
   const navigate = useNavigate(); 
   const params = useParams();
 
   useEffect(() => {
-    const fetchProfesores = async () => {
+    const fetchAlumnos = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/usuarios/profesores'); 
+        const response = await fetch('http://localhost:8080/api/usuarios/alumnos'); 
         const data = await response.json();
-        setProfesores(data);
+        setAlumnos(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchProfesores();
+    fetchAlumnos();
   }, []);
 
-  const filteredProfesores = profesores.filter(profesor =>
-    profesor.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    profesor.apellido.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAlumnos = alumnos.filter(alumno =>
+    alumno.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    alumno.apellido.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDelete = async (profesor) => {
+  const handleDelete = async (alumno) => {
 
-    const confirmDelete = window.confirm(`¿Estás seguro que deseas eliminar al profesor ${profesor.nombre}?`);
+    const confirmDelete = window.confirm(`¿Estás seguro que deseas eliminar al alumno ${alumno.nombre}?`);
     
     if (confirmDelete) {
-      console.log("Eliminamos al profesor " + profesor.nombre);
+      console.log("Eliminamos al alumno " + alumno.nombre);
       try {
-        const response = await axios.delete(`http://localhost:8080/api/usuarios/${profesor._id}`);
-        console.log("Profesor eliminado correctamente:", response.data);
+        const response = await axios.delete(`http://localhost:8080/api/usuarios/${alumno._id}`);
+        console.log("alumno eliminado correctamente:", response.data);
         
         // Actualizar el estado de profesores eliminando el profesor borrado
-        setProfesores(prevProfesores => prevProfesores.filter(p => p._id !== profesor._id));
+        setAlumnos(prevAlumnos => prevAlumnos.filter(p => p._id !== alumno._id));
         
       } catch (error) {
-        console.log("Error eliminando al profesor", error);
+        console.log("Error eliminando al alumno", error);
       }
     } else {
       console.log("Eliminación cancelada");
     }
   };
-
-  const handleDetail = (profesor)=> {
-    console.log("Vemos el detalle " + profesor.nombre)
+  const handleDetail = (alumno)=> {
+    console.log("Vemos el detalle " + alumno.nombre)
   }
 
-  const handleEdit = (profesor)=> {
-    console.log("Vamos a editar al profesor" + profesor.nombre)
-    navigate(`/admin/agregar-profesor/${profesor._id}`)
+  const handleEdit = (alumno)=> {
+    console.log("Vamos a editar al alumno " + alumno.nombre)
+    navigate(`/admin/agregar-alumno/${alumno._id}`)
   }
 
 
   const handleAddClick = () => {
-    navigate("/admin/agregar-profesor"); 
+    navigate("/admin/agregar-alumno"); 
   };
 
   const handleSearchSubmit = (e) => {
@@ -77,7 +76,7 @@ const Profesores = () => {
           <form onSubmit={handleSearchSubmit} className="flex">
             <input
               type="text"
-              placeholder="Buscar profesor..."
+              placeholder="Buscar alumno..."
               className="border p-2 rounded-lg w-full max-w-xs"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)} // Actualizar el término de búsqueda
@@ -85,7 +84,7 @@ const Profesores = () => {
           </form>
           <button
             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 ml-4"
-            onClick={handleAddClick} // Navega al componente ProfesFormPage
+            onClick={handleAddClick} // Navega al componente AlumnoFormPage
           >
             Agregar
           </button>
@@ -105,16 +104,16 @@ const Profesores = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredProfesores.map((profesor) => (
-                  <tr key={profesor.dni} className="bg-gray-50 hover:bg-gray-100">
-                    <td className="px-6 py-2 whitespace-nowrap">{profesor.nombre}</td>
-                    <td className="px-6 py-2 whitespace-nowrap">{profesor.apellido}</td>
-                    <td className="px-6 py-2 whitespace-nowrap">{profesor.dni}</td>
-                    <td className="px-6 py-2 whitespace-nowrap">{profesor.email}</td>
+                {filteredAlumnos.map((alumno) => (
+                  <tr key={alumno.dni} className="bg-gray-50 hover:bg-gray-100">
+                    <td className="px-6 py-2 whitespace-nowrap">{alumno.nombre}</td>
+                    <td className="px-6 py-2 whitespace-nowrap">{alumno.apellido}</td>
+                    <td className="px-6 py-2 whitespace-nowrap">{alumno.dni}</td>
+                    <td className="px-6 py-2 whitespace-nowrap">{alumno.email}</td>
                     <td className="px-6 py-2 whitespace-nowrap">
-                      <button onClick= { ()=> { handleDetail(profesor) }} className="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600">Detalle</button>
-                      <button onClick= { ()=> { handleEdit(profesor) }}className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600">Editar</button>
-                      <button onClick= { ()=> { handleDelete(profesor) }} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
+                      <button onClick= { ()=> { handleDetail(alumno) }} className="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600">Detalle</button>
+                      <button onClick= { ()=> { handleEdit(alumno) }}className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600">Editar</button>
+                      <button onClick= { ()=> { handleDelete(alumno) }} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Eliminar</button>
                     </td>
                   </tr>
                 ))}
@@ -127,4 +126,4 @@ const Profesores = () => {
   );
 };
 
-export default Profesores;
+export default Alumnos;

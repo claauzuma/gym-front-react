@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios'; // Si no lo tienes, instala axios con npm i axios
+import AdminNavBar from '../../components/NavBarAdmin';
 
 const ProfesFormPage = () => {
   const [formData, setFormData] = useState({
@@ -69,13 +70,15 @@ const ProfesFormPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4">
+    <> 
+    <AdminNavBar/> 
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg md:max-w-xl">
+      <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">
         {id ? "Editar Profesor" : "Agregar Profesor"}
       </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="nombre">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="nombre">
             Nombre
           </label>
           <input
@@ -84,13 +87,13 @@ const ProfesFormPage = () => {
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-green-200 focus:border-green-500"
             required
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="apellido">
+  
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="apellido">
             Apellido
           </label>
           <input
@@ -99,13 +102,13 @@ const ProfesFormPage = () => {
             name="apellido"
             value={formData.apellido}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-green-200 focus:border-green-500"
             required
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="dni">
+  
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="dni">
             DNI
           </label>
           <input
@@ -114,13 +117,13 @@ const ProfesFormPage = () => {
             name="dni"
             value={formData.dni}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-green-200 focus:border-green-500"
             required
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="email">
+  
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="email">
             Email
           </label>
           <input
@@ -129,13 +132,13 @@ const ProfesFormPage = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-green-200 focus:border-green-500"
             required
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="password">
+  
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="password">
             Password
           </label>
           <input
@@ -144,19 +147,20 @@ const ProfesFormPage = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-green-200 focus:border-green-500"
             required={!id} // El password solo es requerido al agregar
           />
         </div>
-
+  
         <button
           type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          className="w-full bg-green-500 text-white py-2 rounded-md font-semibold hover:bg-green-600 transition-all"
         >
           {id ? "Actualizar" : "Agregar"}
         </button>
       </form>
     </div>
+    </>
   );
 };
 
