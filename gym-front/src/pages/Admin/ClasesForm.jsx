@@ -10,20 +10,31 @@ const ClasesForm = () => {
     emailProfesor: '',
     horaArranque: '',
     horaFinalizacion: '',
-    capacidad: ''
+    capacidad: '',
+    dia: '', 
   });
 
   const navigate = useNavigate();
-  const { id } = useParams(); // Para obtener el ID de la clase que se va a editar
-  const [profesores, setProfesores] = useState([]); // Estado para almacenar la lista de profesores
-  const [nombreProfe, setNombreProfe] = useState(''); // Estado para el nombre del profesor seleccionado
-  const [emails, setEmails] = useState(['']); // Estado para almacenar los emails del profesor seleccionado
+  const { id } = useParams(); 
+  const [profesores, setProfesores] = useState([]); 
+  const [nombreProfe, setNombreProfe] = useState(''); 
+  const [emails, setEmails] = useState(['']); 
+
+  const diasDeLaSemana = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+  ];
 
   useEffect(() => {
     const getProfesores = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/usuarios/profesores');
-        setProfesores(response.data); // Actualizar el estado con los datos obtenidos
+        setProfesores(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de profesores', error);
       }
@@ -31,17 +42,16 @@ const ClasesForm = () => {
     
     getProfesores();
   
-    if (id) { // Si existe 'id', es un caso de edición
+    if (id) { 
       const getClase = async () => {
         try {
           const response = await axios.get(`http://localhost:8080/api/clases/${id}`);
-          setFormData(response.data); // Rellenar el formulario con los datos de la clase
+          setFormData(response.data);
   
-          // Establecer nombreProfe y emailProfesor
           setNombreProfe(response.data.nombreProfesor);
           setFormData((prevData) => ({
             ...prevData,
-            emailProfesor: response.data.emailProfesor, // Rellenar automáticamente el email
+            emailProfesor: response.data.emailProfesor,
           }));
         } catch (error) {
           console.error("Error al cargar los datos de la clase", error);
@@ -49,8 +59,7 @@ const ClasesForm = () => {
       };
       getClase();
     }
-  }, [id]); 
-
+  }, [id]);
 
   useEffect(() => {
     if (nombreProfe) {
@@ -59,7 +68,7 @@ const ClasesForm = () => {
           const response = await axios.get(`http://localhost:8080/api/usuarios/profesores`);
           const profesoresConMismoNombre = response.data.filter((r) => r.nombre === nombreProfe);
           const emails = profesoresConMismoNombre.map((profesor) => profesor.email);
-          setEmails(emails); 
+          setEmails(emails);
         } catch (error) {
           console.error('Error al obtener los emails del profesor:', error);
         }
@@ -76,6 +85,8 @@ const ClasesForm = () => {
     });
   };
 
+  
+
   const handleChangeProfesor = (e) => {
     const selectedProfesor = e.target.value;
     
@@ -83,13 +94,17 @@ const ClasesForm = () => {
       ...formData,
       nombreProfesor: selectedProfesor,
     });
-
-    console.log("El profe seleccionado es : " + selectedProfesor)
   
     setNombreProfe(selectedProfesor);
-   
   };
 
+  // Función para manejar la selección del día
+  const handleDiaChange = (e) => {
+    setFormData({
+      ...formData,
+      dia: e.target.value, // Solo un día seleccionado
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,27 +112,25 @@ const ClasesForm = () => {
     try {
       if (id) {
         console.log("Vamos a intentar modificar la clase");
-        // Caso de edición: Usamos PUT para actualizar
         const response = await axios.put(`http://localhost:8080/api/clases/${id}`, formData, {
-            withCredentials: true
+          withCredentials: true
         });
         alert('Clase actualizada exitosamente');
       } else {
-        // Caso de creación: Usamos POST para agregar
         const response = await axios.post('http://localhost:8080/api/clases', formData);
         alert('Clase agregada exitosamente');
       }
 
-      // Limpiar el formulario o redirigir después de la acción
       setFormData({
         descripcion: '',
         nombreProfesor: '',
         emailProfesor: '',
         horaArranque: '',
         horaFinalizacion: '',
-        capacidad: ''
+        capacidad: '',
+        dia: '',
       });
-      navigate('/admin/clases'); // Redirigir a la lista de clases
+      navigate('/admin/clases');
 
     } catch (error) {
       console.error("Error al guardar los datos de la clase", error);
@@ -149,46 +162,69 @@ const ClasesForm = () => {
         </div>
   
         <div>
-        <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="nombreProfesor">
-          Nombre del Profesor
-        </label>
-        <select
-          id="nombreProfesor"
-          name="nombreProfesor"
-          value={formData.nombreProfesor}
-          onChange={handleChangeProfesor}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500"
-          required
-        >
-          <option value="">Selecciona un Profesor</option>
-          {profesores.map((profesor) => (
-            <option key={profesor.id} value={profesor.nombre}>
-              {profesor.nombre}
-            </option>
-          ))}
-        </select>
-      </div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="nombreProfesor">
+            Nombre del Profesor
+          </label>
+          <select
+            id="nombreProfesor"
+            name="nombreProfesor"
+            value={formData.nombreProfesor}
+            onChange={handleChangeProfesor}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500"
+            required
+          >
+            <option value="">Selecciona un Profesor</option>
+            {profesores.map((profesor) => (
+              <option key={profesor.id} value={profesor.nombre}>
+                {profesor.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
   
-      <div>
-  <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="emailProfesor">
-    Email del Profesor
-  </label>
-  <select
-    id="emailProfesor"
-    name="emailProfesor"
-    value={formData.emailProfesor}
-    onChange={handleChange}
-    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500"
-    required
-  >
-    <option value="">Selecciona un Email</option>
-    {emails.map((email, index) => (
-      <option key={index} value={email}>
-        {email}
-      </option>
-    ))}
-  </select>
-</div>
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="emailProfesor">
+            Email del Profesor
+          </label>
+          <select
+            id="emailProfesor"
+            name="emailProfesor"
+            value={formData.emailProfesor}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500"
+            required
+          >
+            <option value="">Selecciona un Email</option>
+            {emails.map((email, index) => (
+              <option key={index} value={email}>
+                {email}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Campo para seleccionar un solo día */}
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-700">
+            Día de la Clase
+          </label>
+          <select
+            id="dia"
+            name="dia"
+            value={formData.dia}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200 focus:border-blue-500"
+            required
+          >
+            <option value="">Selecciona un día</option>
+            {diasDeLaSemana.map((dia, index) => (
+              <option key={index} value={dia}>
+                {dia}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div>
           <label className="block text-sm font-semibold mb-2 text-gray-700" htmlFor="horaArranque">
             Hora de Arranque
@@ -233,13 +269,15 @@ const ClasesForm = () => {
             required
           />
         </div>
-  
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md font-semibold hover:bg-blue-600 transition-all"
-        >
-          {id ? "Actualizar" : "Agregar"}
-        </button>
+
+        <div className="text-center">
+          <button
+            type="submit"
+            className="px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+          >
+            {id ? "Guardar Cambios" : "Crear Clase"}
+          </button>
+        </div>
       </form>
     </div>
     </>

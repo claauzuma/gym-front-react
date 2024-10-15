@@ -26,7 +26,7 @@ const ClasesDetail = () => {
 
         // Esperar a que todas las promesas se resuelvan
         const alumnosDetalles = await Promise.all(alumnoPromises);
-        setInscriptos(alumnosDetalles); // Actualiza el estado con los detalles de los alumnos
+        setInscriptos(alumnosDetalles);
 
       } catch (error) {
         setError('Error al cargar los detalles de la clase o los alumnos.');
@@ -40,7 +40,7 @@ const ClasesDetail = () => {
   }, [id]);
 
   const handleDesuscribir = (alumnoId) => {
-    // Lógica para desuscribir al alumno (por ejemplo, enviar una solicitud DELETE)
+
     console.log(`Desuscribir alumno con ID: ${alumnoId}`);
     
   };
