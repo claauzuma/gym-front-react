@@ -10,7 +10,7 @@ const AlumnoFormPage = () => {
     dni: '',
     email: '',
     password: '',
-    ingreso: '',
+    pago: '',
     plan: 'basico' // Valor predeterminado
   });
 
@@ -62,7 +62,7 @@ const AlumnoFormPage = () => {
         dni: '',
         email: '',
         password: '',
-        ingreso: '',
+        pago: '',
         plan: 'basico'
       });
       navigate('/admin/alumnos'); // Redirigir a la lista de alumnos
@@ -158,19 +158,27 @@ const AlumnoFormPage = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="fechaIngreso">
-            Fecha de Ingreso
-          </label>
-          <input
-            type="date"
-            id="ingreso"
-            name="ingreso"
-            value={formData.ingreso}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
-            required
-          />
-        </div>
+  <label className="block text-sm font-bold mb-2" htmlFor="pago">
+    Pago
+  </label>
+  <select
+    id="pago"
+    name="pago"
+    value={formData.pago}
+    onChange={handleChange}
+    className="w-full px-3 py-2 border rounded-md"
+    required
+  >
+    <option value="">Seleccione una opción</option> {/* Opción por defecto */}
+    <option value="diario">Diario</option>
+    <option value="mensual">Mensual</option>
+    <option value="quincenal">Quincenal</option>
+    <option value="bimestral">Bimestral</option>
+    <option value="trimestral">Trimestral</option>
+    <option value="semestral">Semestral</option>
+    <option value="anual">Anual</option>
+  </select>
+</div>
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="plan">

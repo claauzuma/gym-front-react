@@ -179,8 +179,9 @@ const Clases = () => {
   return (
     <>
       <AdminNavBar />
+      
       <div className="container mx-auto p-4">
-        <h1 className="text-4xl font-bold mb-8">Clases</h1>
+      <h1 className="text-4xl font-bold text-center my-4">Clases</h1>
         
         {/* Filtros y Búsqueda */}
         <div className="flex justify-around items-center bg-indigo-600 text-white p-4 rounded-lg mb-8">
