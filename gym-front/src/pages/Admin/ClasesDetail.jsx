@@ -39,10 +39,22 @@ const ClasesDetail = () => {
     getClaseDetails();
   }, [id]);
 
-  const handleDesuscribir = (alumnoId) => {
+  const handleDesuscribir = async (alumnoId) => {
+    try {
+      console.log(`Desuscribir alumno con ID: ${alumnoId}`);
+      const response = await axios.delete(`http://localhost:8080/api/usuarios/clases/desuscribir/${id}/${alumnoId}`);
+  
+      if (response.status === 200) {
+        console.log("Alumno desuscrito exitosamente");
+        window.location.reload()
+        
+      } else {
+        console.log("Error al desuscribir al alumno");
+      }
+    } catch (error) {
+      console.error("Error al intentar desuscribir al alumno:", error);
 
-    console.log(`Desuscribir alumno con ID: ${alumnoId}`);
-    
+    }
   };
 
   if (loading) {
